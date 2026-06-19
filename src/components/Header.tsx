@@ -1,12 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, Menu, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Mail, Phone, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isSignedIn } = useUser();
+  const { signOut } = useClerk();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -81,9 +85,27 @@ const Header = () => {
             <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" asChild>
               <Link href="/contact">Contact Us</Link>
             </Button>
-            <Button asChild>
-              <Link href="/sign-in">Sign In</Link>
-            </Button>
+            {isSignedIn ? (
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/dashboard">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </Button>
+                <Avatar className="w-8 h-8 cursor-pointer" onClick={() => signOut({ redirectUrl: "/" })}>
+                  <AvatarImage src={user?.imageUrl} />
+                  <AvatarFallback className="text-xs">{user?.firstName?.[0]}{user?.lastName?.[0]}</AvatarFallback>
+                </Avatar>
+                <Button variant="ghost" size="sm" onClick={() => signOut({ redirectUrl: "/" })}>
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <Button asChild>
+                <Link href="/sign-in">Sign In</Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -137,9 +159,28 @@ const Header = () => {
               >
                 <Link href="/contact">Contact Us</Link>
               </Button>
-              <Button className="w-full" onClick={toggleMenu} asChild>
-                <Link href="/sign-in">Sign In</Link>
-              </Button>
+              {isSignedIn ? (
+                <>
+                  <Button variant="outline" className="w-full" onClick={toggleMenu} asChild>
+                    <Link href="/dashboard">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="w-full"
+                    onClick={() => { toggleMenu(); signOut({ redirectUrl: "/" }); }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Button className="w-full" onClick={toggleMenu} asChild>
+                  <Link href="/sign-in">Sign In</Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>
