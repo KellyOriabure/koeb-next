@@ -71,8 +71,7 @@ const Products = () => {
 
   const getImageSrc = (product: Product) => {
     if (product.image_url) {
-      const key = product.image_url.replace(/^https?:\/\/[^/]+\//, "");
-      return `/api/image/${key}`;
+      return product.image_url;
     }
     if (product.image) {
       const img = product.image as any;
