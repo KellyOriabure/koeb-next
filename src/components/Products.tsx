@@ -71,7 +71,8 @@ const Products = () => {
 
   const getImageSrc = (product: Product) => {
     if (product.image_url) {
-      return product.image_url;
+      const key = product.image_url.replace(/^https?:\/\/[^/]+\//, "");
+      return `/api/image/${key}`;
     }
     if (product.image) {
       const img = product.image as any;
@@ -114,7 +115,7 @@ const Products = () => {
                   src={getImageSrc(product)}
                   alt={product.title}
                   className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
                 />
               ) : (
                 <ImagePlaceholder />

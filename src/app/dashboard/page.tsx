@@ -438,12 +438,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-4 w-4" />
-          </Button>
           <Avatar>
             <AvatarImage src={user?.imageUrl} />
             <AvatarFallback>{user?.firstName?.[0] || "A"}</AvatarFallback>

@@ -76,7 +76,8 @@ const HomeProducts: React.FC = () => {
 
     const getImageSrc = (product: Product) => {
         if (product.image_url) {
-            return product.image_url;
+            const key = product.image_url.replace(/^https?:\/\/[^/]+\//, "");
+            return `/api/image/${key}`;
         }
         if (product.image) {
             const img = product.image as any;
@@ -172,7 +173,7 @@ const HomeProducts: React.FC = () => {
                                                     src={getImageSrc(product)}
                                                     alt={product.title}
                                                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                                    onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
                                                 />
                                             ) : (
                                                 <ImagePlaceholder />
